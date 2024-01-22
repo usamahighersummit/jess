@@ -9,8 +9,6 @@ import logoutIcon from "../../images/ic_logout.svg";
 import profileIcon from "../../images/LOGOUT.png";
 import Dropdown from "react-bootstrap/Dropdown";
 import logo from "../../images/logo3.png";
-import { styled as styleds } from "@mui/material/styles";
-import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import "bootstrap/dist/css/bootstrap.css";
 import StudentJoinClassroomDialogue from "../Dialogues/StudentJoinClassroomDialogue";
 import appContext from "../../context/appContext";
@@ -174,6 +172,8 @@ const Sidebar = ({ item_id }) => {
                       key={index}
                     />
                   );
+
+                return null;
               })}
             </SidebarWrap>
           </SidebarNav>

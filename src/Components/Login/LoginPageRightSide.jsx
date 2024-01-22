@@ -15,25 +15,22 @@ function LoginPageRightSide() {
 
   const validateEmail = () => {
     const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-    let emailIsValid = false;
     if (!credentials.email) {
       setEmailError("Email is required");
     } else if (!emailPattern.test(credentials.email)) {
       setEmailError("Invalid email address");
     } else {
       setEmailError("");
-      emailIsValid = true;
       noErrorState.current.email = true;
     }
   };
 
   const validatePassword = () => {
-    let passwordIsValid = false;
     if (!credentials.password) {
       setPasswordError("Password is required");
     } else if (
       credentials.password.length < 6 ||
-      !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{6,}$/.test(
+      !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\.])[A-Za-z\d!@#$%^&*()_+\.]{6,}$/.test(
         credentials.password
       )
     ) {
@@ -42,7 +39,6 @@ function LoginPageRightSide() {
       );
     } else {
       setPasswordError("");
-      passwordIsValid = true;
       noErrorState.current.password = true;
     }
   };

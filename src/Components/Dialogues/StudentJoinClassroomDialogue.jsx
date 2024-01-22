@@ -7,7 +7,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Cross from "../../images/cross.png";
 import appContext from "../../context/appContext";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 function StudentJoinClassroomDialogue(props) {
   const state = useContext(appContext);
@@ -16,9 +15,9 @@ function StudentJoinClassroomDialogue(props) {
     props.handleClickCloseJoinClassroomDialogue();
   };
 
-  const handleViewClass = (class_id) => {
-    state.handleClickOpenShareClassCodeDialogue();
-  };
+  // const handleViewClass = (class_id) => {
+  //   state.handleClickOpenShareClassCodeDialogue();
+  // };
 
   const handleClickContinue = () => {
     var classCodeInput = document.getElementById("class_code");
@@ -77,7 +76,7 @@ function StudentJoinClassroomDialogue(props) {
       >
         <DialogTitle className="flex">
           <button onClick={() => props.handleClickCloseJoinClassroomDialogue()}>
-            <img src={Cross}></img>
+            <img src={Cross} alt=""></img>
           </button>
           <div className="text-center w-[100%] create_new_classroom_dialogue_title">
             Join Class

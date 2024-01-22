@@ -76,7 +76,7 @@ function JoinClassroom() {
       .then((res) => {
         console.log("classroom : ", res.data);
         if (res.data.class_id !== 0) {
-          navigate("/home-screen");
+          navigate("/home");
         } else {
           setOpen(true);
         }

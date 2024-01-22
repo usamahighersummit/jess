@@ -1,26 +1,18 @@
-import axios from "axios";
-import React, { useContext, useState } from "react";
-import appContext from "../../../context/appContext";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import Person from "../../../images/person.png";
 
 function HomeClassroomCard(props) {
-  const [selectedFolder, setSelectedFolder] = useState(null);
   var classroomData = props.classroomData;
   console.log("classrooms: ", classroomData);
-  const state = useContext(appContext);
   const navigate = useNavigate();
 
   const handleViewClass = (classroom) => {
-    // localStorage.setItem("teacher_table_state", 1);
-    // navigate("/teacher-classroom-home?id=" + classroom.classroom_id);
-  };
-  const handleClick = () => {
-    // navigate("/create-classroom", {
-    //   state: {
-    //     folder_id: selectedFolder !== null ? selectedFolder.folder_id : null,
-    //   },
-    // });
+    console.log("CLASS ID IS: ", classroom);
+    navigate("/classroom-home", {
+      state: {
+        class_id: classroom.classroom_id,
+      },
+    });
   };
   return (
     <div>
