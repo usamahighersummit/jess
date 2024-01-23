@@ -112,7 +112,7 @@ function QuizCard({
                   }
                   alt=""
                 />
-                <div className="mt-[8px] feedback-text leading-[20px]">
+                <div className="feedback-text" style={{ lineHeight: "20px" }}>
                   {quizData[selectedQuizQuestionIterationIndex].answers[
                     selectedAnswerIndex
                   ].quiz_options_score === 0
