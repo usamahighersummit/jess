@@ -16,8 +16,8 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import QuizCard from "./QuizCard";
+import axios from "axios";
 
 const drawerWidth = 240;
 
@@ -66,7 +66,22 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-export default function ClassroomHomeDrawer({ quizzesData }) {
+export default function ClassroomHomeDrawer({
+  quizzesData,
+  handleQuizValue,
+  quizData,
+  selectedQuizQuestionIterationIndex,
+  handleIterationIndex,
+  selectedAnswerIndex,
+  handleSelectedAnswer,
+  isSubmitted,
+  handleSubmittedStatus,
+  quizCompleted,
+  quizScore,
+  handleQuizMarks,
+  quizTotalMarks,
+  handleQuizTotalMarks,
+}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -78,11 +93,33 @@ export default function ClassroomHomeDrawer({ quizzesData }) {
     setOpen(false);
   };
 
+  const handleQuizClick = (quiz) => {
+    var token = "Bearer " + localStorage.getItem("access_token");
+    axios.defaults.baseURL = process.env.REACT_APP_REST_API_BASE_URL;
+    axios.defaults.headers.post["Content-Type"] =
+      "application/json;charset=utf-8";
+    axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+    axios.defaults.headers.post["authorization"] = token;
+    axios
+      .post(process.env.REACT_APP_REST_API_BASE_URL + "/student_get_quiz", {
+        method: "POST",
+        student_quiz_id: quiz.student_quiz_id,
+      })
+      .then((res) => {
+        console.log("Quiz: ", res.data);
+        handleQuizValue(res.data.quiz_question_list);
+        handleQuizTotalMarks(quiz.quiz_marks);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar>
+        <Toolbar style={{ background: "#403151" }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -93,7 +130,7 @@ export default function ClassroomHomeDrawer({ quizzesData }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Persistent drawer
+            {/* Persistent drawer */}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -121,62 +158,36 @@ export default function ClassroomHomeDrawer({ quizzesData }) {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
+          {quizzesData.map((quiz, index) => (
+            <ListItem key={quiz.student_quiz_id} disablePadding>
+              <ListItemButton onClick={() => handleQuizClick(quiz)}>
+                <ListItemIcon></ListItemIcon>
+                <ListItemText primary={quiz.student_quiz_title} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
         <Divider />
-        <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
-          dolor purus non enim praesent elementum facilisis leo vel. Risus at
-          ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum
-          quisque non tellus. Convallis convallis tellus id interdum velit
-          laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed
-          adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies
-          integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate
-          eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo
-          quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat
-          vivamus at augue. At augue eget arcu dictum varius duis at consectetur
-          lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien
-          faucibus et molestie ac.
-        </Typography>
-        <Typography paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-          ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
-          elementum integer enim neque volutpat ac tincidunt. Ornare suspendisse
-          sed nisi lacus sed viverra tellus. Purus sit amet volutpat consequat
-          mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis
-          risus sed vulputate odio. Morbi tincidunt ornare massa eget egestas
-          purus viverra accumsan in. In hendrerit gravida rutrum quisque non
-          tellus orci ac. Pellentesque nec nam aliquam sem et tortor. Habitant
-          morbi tristique senectus et. Adipiscing elit duis tristique
-          sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-          posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
+        <div className="flex justify-center mt-[10%] ">
+          <QuizCard
+            quizData={quizData}
+            selectedQuizQuestionIterationIndex={
+              selectedQuizQuestionIterationIndex
+            }
+            handleIterationIndex={handleIterationIndex}
+            selectedAnswerIndex={selectedAnswerIndex}
+            handleSelectedAnswer={handleSelectedAnswer}
+            isSubmitted={isSubmitted}
+            handleSubmittedStatus={handleSubmittedStatus}
+            quizCompleted={quizCompleted}
+            quizScore={quizScore}
+            handleQuizMarks={handleQuizMarks}
+            quizTotalMarks={quizTotalMarks}
+          />
+        </div>
       </Main>
     </Box>
   );

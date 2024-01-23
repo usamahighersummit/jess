@@ -372,3 +372,123 @@ letter-spacing: 0.1px;
   line-height: 20px; /* 142.857% */
   letter-spacing: 0.1px;
 }
+.question-iteration{
+  color: #403151;
+font-family: Roboto;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 24px; /* 150% */
+letter-spacing: 0.1px;
+}
+.question-text{
+  color: #403151;
+font-family: Roboto;
+font-size: 22px;
+font-style: normal;
+font-weight: 500;
+line-height: 28px; /* 127.273% */
+letter-spacing: 0.15px;
+}
+.option-buttons{
+  border-radius: 8px;
+background: #E1DAE3;
+padding: 22px 32px ;
+width: 100%;
+margin-top: 2%;
+color: #252744;
+font-feature-settings: 'clig' off, 'liga' off;
+font-family: Roboto;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24%; /* 3.84px */
+letter-spacing: 0.15px;
+text-align: start;
+}
+.disabled-submit-button{
+  background: var(--m-3-state-layers-light-on-surface-opacity-012, rgba(29, 27, 32, 0.12));
+  color: var(--M3-sys-light-on-surface, #1D1B20);
+text-align: center;
+font-family: Roboto;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 20px;
+letter-spacing: 0.1px;
+padding: 10px 24px;
+color: var(--M3-sys-light-on-surface, #1D1B20);
+text-align: center;
+
+/* M3/label/large */
+font-family: Roboto;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 20px; /* 142.857% */
+letter-spacing: 0.1px;
+opacity: 0.38;
+}
+.enabled-submit-button{
+  border-radius: 4px;
+background: #7E418B;
+padding: 10px 24px;
+color: var(--M3-sys-light-on-primary, #FFF);
+text-align: center;
+
+/* M3/label/large */
+font-family: Roboto;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 20px; /* 142.857% */
+letter-spacing: 0.1px;
+}
+.instruction-text{
+  color: rgba(64, 49, 81, 0.84);
+font-family: Roboto;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 20px; /* 142.857% */
+letter-spacing: 0.1px;
+}
+.score-text{
+  color: #7E418B;
+text-align: center;
+font-feature-settings: 'clig' off, 'liga' off;
+font-family: Roboto;
+font-size: 36px;
+font-style: normal;
+font-weight: 700;
+line-height: 44%; /* 15.84px */
+}
+.score-sub-text{
+  color: #7E418B;
+text-align: center;
+font-feature-settings: 'clig' off, 'liga' off;
+font-family: Roboto;
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: 24%; /* 3.84px */
+}
+.quiz-completed-text{
+  color: #252744;
+text-align: center;
+font-family: Roboto;
+font-size: 24px;
+font-style: normal;
+font-weight: 600;
+line-height: 32px; /* 133.333% */
+}
+.quiz-completed-sub-text{
+  color: #252744;
+font-feature-settings: 'clig' off, 'liga' off;
+font-family: Roboto;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24%; /* 3.84px */
+letter-spacing: 0.15px;
+}

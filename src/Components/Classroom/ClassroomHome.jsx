@@ -6,8 +6,55 @@ import moment from "moment";
 
 function ClassroomHome() {
   const [quizzesData, setQuizzesData] = useState([]);
+  const [quizData, setQuizData] = useState();
+  const [
+    selectedQuizQuestionIterationIndex,
+    setSelectedQuizQuestionIterationIndex,
+  ] = useState(0);
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(-1);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [quizTotalMarks, setQuizTotalMarks] = useState();
   const location = useLocation();
   let { class_id } = location.state !== null ? location.state : "";
+
+  const handleQuizValue = (quiz) => {
+    setQuizData(quiz);
+  };
+
+  const handleQuizTotalMarks = (quizTotalMarks) => {
+    setQuizTotalMarks(quizTotalMarks);
+  };
+
+  const handleQuizMarks = (questionMarks) => {
+    let score = quizScore;
+    setQuizScore(score + questionMarks);
+  };
+
+  const handleSubmittedStatus = (submitState) => {
+    setIsSubmitted(submitState);
+  };
+
+  const handleSelectedAnswer = (index) => {
+    setSelectedAnswerIndex(index);
+  };
+
+  const handleIterationIndex = () => {
+    if (selectedQuizQuestionIterationIndex < quizData.length - 1) {
+      handleQuizMarks(
+        quizData[selectedQuizQuestionIterationIndex].answers[
+          selectedAnswerIndex
+        ].quiz_options_score
+      );
+      let index = selectedQuizQuestionIterationIndex;
+      setSelectedQuizQuestionIterationIndex(++index);
+      setSelectedAnswerIndex(-1);
+      setIsSubmitted(false);
+    } else {
+      setQuizCompleted(true);
+    }
+  };
 
   useEffect(() => {
     getClasroomQuizzes();
@@ -36,7 +83,22 @@ function ClassroomHome() {
   };
   return (
     <div>
-      <ClassroomHomeDrawer quizzesData={quizzesData} />
+      <ClassroomHomeDrawer
+        quizzesData={quizzesData}
+        handleQuizValue={handleQuizValue}
+        quizData={quizData}
+        selectedQuizQuestionIterationIndex={selectedQuizQuestionIterationIndex}
+        handleIterationIndex={handleIterationIndex}
+        selectedAnswerIndex={selectedAnswerIndex}
+        handleSelectedAnswer={handleSelectedAnswer}
+        isSubmitted={isSubmitted}
+        handleSubmittedStatus={handleSubmittedStatus}
+        quizCompleted={quizCompleted}
+        quizScore={quizScore}
+        handleQuizMarks={handleQuizMarks}
+        quizTotalMarks={quizTotalMarks}
+        handleQuizTotalMarks={handleQuizTotalMarks}
+      />
     </div>
   );
 }

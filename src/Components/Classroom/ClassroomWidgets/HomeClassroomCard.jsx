@@ -7,7 +7,6 @@ function HomeClassroomCard(props) {
   const navigate = useNavigate();
 
   const handleViewClass = (classroom) => {
-    console.log("CLASS ID IS: ", classroom);
     navigate("/classroom-home", {
       state: {
         class_id: classroom.classroom_id,
