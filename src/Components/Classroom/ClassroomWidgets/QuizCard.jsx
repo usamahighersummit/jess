@@ -88,8 +88,8 @@ function QuizCard({
           </div>
 
           {isSubmitted && (
-            <div className="flex">
-              <button
+            <div className="flex ">
+              <div
                 style={{
                   padding: "10px",
                   border:
@@ -99,9 +99,10 @@ function QuizCard({
                       ? "1.5px solid #EB6262"
                       : "1.5px solid #74DA7F",
                 }}
-                className="option-buttons flex"
+                className="option-buttons flex space-x-2"
               >
                 <img
+                  style={{ objectFit: "contain" }}
                   src={
                     quizData[selectedQuizQuestionIterationIndex].answers[
                       selectedAnswerIndex
@@ -111,7 +112,7 @@ function QuizCard({
                   }
                   alt=""
                 />
-                <div className="mt-[8px]">
+                <div className="mt-[8px] feedback-text leading-[20px]">
                   {quizData[selectedQuizQuestionIterationIndex].answers[
                     selectedAnswerIndex
                   ].quiz_options_score === 0
@@ -120,7 +121,7 @@ function QuizCard({
                     : quizData[selectedQuizQuestionIterationIndex]
                         .quiz_correct_feedback}
                 </div>
-              </button>
+              </div>
             </div>
           )}
         </div>
