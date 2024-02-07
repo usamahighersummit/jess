@@ -16,6 +16,7 @@ function ClassroomHome() {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
   const [quizTotalMarks, setQuizTotalMarks] = useState();
+  const [sidebarData, setSidebarData] = useState();
   const location = useLocation();
   let { class_id } = location.state !== null ? location.state : "";
 
@@ -41,12 +42,14 @@ function ClassroomHome() {
   };
 
   const handleIterationIndex = () => {
-    if (selectedQuizQuestionIterationIndex < quizData.length - 1) {
+    if (selectedQuizQuestionIterationIndex <= quizData.length - 1) {
       handleQuizMarks(
         quizData[selectedQuizQuestionIterationIndex].answers[
           selectedAnswerIndex
         ].quiz_options_score
       );
+    }
+    if (selectedQuizQuestionIterationIndex < quizData.length - 1) {
       let index = selectedQuizQuestionIterationIndex;
       setSelectedQuizQuestionIterationIndex(++index);
       setSelectedAnswerIndex(-1);
@@ -58,6 +61,7 @@ function ClassroomHome() {
 
   useEffect(() => {
     getClasroomQuizzes();
+    getSidebarData();
   }, []);
 
   const getClasroomQuizzes = () => {
@@ -81,6 +85,47 @@ function ClassroomHome() {
         console.log(error);
       });
   };
+
+  const getCurrentDate = () => {
+    const date = new Date();
+    const todayDate =
+      date.getFullYear() +
+      "-" +
+      date.getMonth() +
+      "-" +
+      date.getDate() +
+      " " +
+      date.getHours() +
+      ":" +
+      date.getMinutes() +
+      ":" +
+      date.getSeconds() +
+      "." +
+      date.getMilliseconds();
+
+    return todayDate;
+  };
+  const getSidebarData = () => {
+    var token = "Bearer " + localStorage.getItem("access_token");
+    axios.defaults.baseURL = process.env.REACT_APP_REST_API_BASE_URL;
+    axios.defaults.headers.post["Content-Type"] =
+      "application/json;charset=utf-8";
+    axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+    axios.defaults.headers.post["authorization"] = token;
+    axios
+      .post(process.env.REACT_APP_REST_API_BASE_URL + "/view_class_jess", {
+        method: "POST",
+        class_id: class_id,
+        today_date: getCurrentDate(),
+      })
+      .then((res) => {
+        console.log("Sidebar Data: ", res.data);
+        setSidebarData(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <div>
       <ClassroomHomeDrawer
@@ -98,6 +143,7 @@ function ClassroomHome() {
         handleQuizMarks={handleQuizMarks}
         quizTotalMarks={quizTotalMarks}
         handleQuizTotalMarks={handleQuizTotalMarks}
+        sidebarData={sidebarData}
       />
     </div>
   );

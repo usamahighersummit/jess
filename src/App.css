@@ -502,3 +502,138 @@ font-weight: 400;
 line-height: 24%; /* 3.84px */
 letter-spacing: 0.15px;
 }
+.accordian-header-text{
+  font-family: Roboto;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 24px; /* 150% */
+letter-spacing: 0.016px;
+}
+.teepee-button {
+  color: #ece5f2;
+  font-size: 18px;
+  float: right;
+  background: #6750a4;
+  border-radius: 5px
+    /* 6px */
+  ;
+  font-weight: normal;
+  padding-top: 0.5rem
+    /* 8px */
+  ;
+  padding-bottom: 0.5rem
+    /* 8px */
+  ;
+  padding-left: 1rem
+    /* 16px */
+  ;
+  padding-right: 1rem
+    /* 16px */
+  ;
+}
+.custom-grid {
+  grid-template-columns: 1fr 2fr; /* Adjust these values */
+}
+
+.animation{
+  animation: rotate-text-up 1.5s ;
+}
+@keyframes rotate-text-up {
+0% {
+  transform: translate3d(0px, 80px, 0);
+  opacity: 0;
+}
+80% {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+}
+@keyframes rotate-text-right {
+0% {
+  transform: translate3d(90px, 0px, 0);
+  opacity: 0;
+}
+80% {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+}
+
+.paragraph{
+  color: rgba(255, 255, 255, 0.84);
+font-family: Roboto;
+font-size: 22px;
+font-style: normal;
+font-weight: 400;
+line-height: 28px; /* 127.273% */
+letter-spacing: 0.022px;
+}
+.lesson-buttons{
+  padding: 10px 16px 10px 12px;
+  background: rgba(126, 65, 139, 0.44);
+  color: rgba(255, 255, 255, 0.84);
+  /* M3/label/large */ 
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+  letter-spacing: 0.1px;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.bouncing-loader {
+  display: flex;
+  justify-content: center;
+}
+
+.bouncing-loader > div {
+  width: 16px;
+  height: 16px;
+  margin: 3px 6px;
+  border-radius: 50%;
+  background-color: #a3a1a1;
+  opacity: 1;
+  animation: bouncing-loader 0.6s infinite alternate;
+}
+
+@keyframes bouncing-loader {
+  to {
+    opacity: 0.1;
+    transform: translateY(-16px);
+  }
+}
+
+.bouncing-loader > div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.bouncing-loader > div:nth-child(3) {
+  animation-delay: 0.4s;
+}
+.lesson-or-quiz-text{
+  color: #FFF;
+font-family: Roboto;
+font-size: 12px;
+font-style: normal;
+font-weight: 700;
+line-height: 16px; /* 133.333% */
+letter-spacing: 0.012px;
+}
+.lesson-or-quiz-sub-text{
+  color: rgba(255, 255, 255, 0.82);
+  font-family: Roboto;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px; /* 133.333% */
+  letter-spacing: 0.012px;
+}

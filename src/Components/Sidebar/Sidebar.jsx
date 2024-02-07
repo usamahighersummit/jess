@@ -61,7 +61,7 @@ const Sidebar = ({ item_id }) => {
     localStorage.removeItem("quiz_type");
     localStorage.removeItem("class_code");
     localStorage.removeItem("student");
-    window.location.replace("/login");
+    window.location.replace("/");
   }
   var backgroundColor = "transparent";
   return (

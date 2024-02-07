@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useRef, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -18,8 +18,10 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import QuizCard from "./QuizCard";
 import axios from "axios";
+import { SidebarTopicAccordian } from "./SidebarAccordians/SidebarTopicAccordian";
+import LessonCard from "./LessonCard";
 
-const drawerWidth = 240;
+const drawerWidth = 340;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
@@ -81,9 +83,27 @@ export default function ClassroomHomeDrawer({
   handleQuizMarks,
   quizTotalMarks,
   handleQuizTotalMarks,
+  sidebarData,
 }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [quizOrLesson, setQuizOrLesson] = React.useState(2);
+  const [lessonResponseData, setLessonResponseData] = React.useState();
+  const [selectedResponseButtons, setSelectedResponseButtons] = React.useState(
+    []
+  );
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [speaking, setSpeaking] = useState(false);
+  const isFirstRender = useRef(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedAnswerIndexLesson, setSelectedAnswerIndexLesson] =
+    useState(-1);
+  const [isSpinning, setIsSpinning] = useState(false);
+  const [pauseResumeStatus, setPauseResumeStatus] = useState(true);
+  const [currentWordIndex, setCurrentWordIndex] = useState(-4);
+  const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
+  const [chunkSize, setChunkSize] = useState(4);
+  const [lessonButtonData, setLessonButtonData] = useState([]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -107,8 +127,34 @@ export default function ClassroomHomeDrawer({
       })
       .then((res) => {
         console.log("Quiz: ", res.data);
+        setQuizOrLesson(0);
         handleQuizValue(res.data.quiz_question_list);
         handleQuizTotalMarks(quiz.quiz_marks);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleLessonClick = (lesson) => {
+    var token = "Bearer " + localStorage.getItem("access_token");
+    axios.defaults.baseURL = process.env.REACT_APP_REST_API_BASE_URL;
+    axios.defaults.headers.post["Content-Type"] =
+      "application/json;charset=utf-8";
+    axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+    axios.defaults.headers.post["authorization"] = token;
+    axios
+      .post(process.env.REACT_APP_REST_API_BASE_URL + "/get_lesson_for_user", {
+        method: "POST",
+        lesson_key: lesson.lesson_key,
+      })
+      .then((res) => {
+        setQuizOrLesson(1);
+        console.log("DATA", res.data.lesson_data[0].page_list);
+        setLessonResponseData(res.data.lesson_data[0].page_list);
+        setSelectedResponseButtons(
+          res.data.lesson_data[0].page_list[0].options_list
+        );
       })
       .catch((error) => {
         console.log(error);
@@ -118,7 +164,7 @@ export default function ClassroomHomeDrawer({
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={open} style={{ background: "#403151" }}>
         <Toolbar style={{ background: "#403151" }}>
           <IconButton
             color="inherit"
@@ -129,6 +175,7 @@ export default function ClassroomHomeDrawer({
           >
             <MenuIcon />
           </IconButton>
+
           <Typography variant="h6" noWrap component="div">
             {/* Persistent drawer */}
           </Typography>
@@ -141,52 +188,84 @@ export default function ClassroomHomeDrawer({
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
+            background: "#403151",
+            borderRight: "0.5px solid white",
           },
         }}
         variant="persistent"
         anchor="left"
         open={open}
       >
-        <DrawerHeader>
+        <DrawerHeader
+          style={{
+            background: "#403151",
+            minHeight: "20%",
+          }}
+        >
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
+              <ChevronLeftIcon style={{ color: "white" }} />
             ) : (
               <ChevronRightIcon />
             )}
           </IconButton>
         </DrawerHeader>
-        <Divider />
-        <List>
-          {quizzesData.map((quiz, index) => (
+        <List style={{ background: "#403151" }}>
+          {sidebarData &&
+            sidebarData.topic_list.map((topic, index) => (
+              <>
+                <SidebarTopicAccordian
+                  topic={topic}
+                  topicIndex={index}
+                  handleLessonClick={handleLessonClick}
+                  handleQuizClick={handleQuizClick}
+                />
+                <hr className="mt-0 mb-0" style={{ color: "white" }}></hr>
+              </>
+            ))}
+
+          {/* {quizzesData.map((quiz, index) => (
             <ListItem key={quiz.student_quiz_id} disablePadding>
               <ListItemButton onClick={() => handleQuizClick(quiz)}>
                 <ListItemIcon></ListItemIcon>
-                <ListItemText primary={quiz.student_quiz_title} />
+                <ListItemText
+                  primary={quiz.student_quiz_title}
+                  style={{ color: "white" }}
+                />
               </ListItemButton>
             </ListItem>
-          ))}
+          ))} */}
         </List>
         <Divider />
       </Drawer>
-      <Main open={open}>
+      <Main open={open} style={{ padding: "0px" }}>
         <DrawerHeader />
-        <div className="flex justify-center mt-[10%] ">
-          <QuizCard
-            quizData={quizData}
-            selectedQuizQuestionIterationIndex={
-              selectedQuizQuestionIterationIndex
-            }
-            handleIterationIndex={handleIterationIndex}
-            selectedAnswerIndex={selectedAnswerIndex}
-            handleSelectedAnswer={handleSelectedAnswer}
-            isSubmitted={isSubmitted}
-            handleSubmittedStatus={handleSubmittedStatus}
-            quizCompleted={quizCompleted}
-            quizScore={quizScore}
-            handleQuizMarks={handleQuizMarks}
-            quizTotalMarks={quizTotalMarks}
-          />
+        <div className=" ">
+          {quizOrLesson === 1 ? (
+            <LessonCard
+              lessonResponseData={lessonResponseData}
+              selectedResponseButtons={selectedResponseButtons}
+              setSelectedResponseButtons={setSelectedResponseButtons}
+            />
+          ) : (
+            quizOrLesson === 0 && (
+              <QuizCard
+                quizData={quizData}
+                selectedQuizQuestionIterationIndex={
+                  selectedQuizQuestionIterationIndex
+                }
+                handleIterationIndex={handleIterationIndex}
+                selectedAnswerIndex={selectedAnswerIndex}
+                handleSelectedAnswer={handleSelectedAnswer}
+                isSubmitted={isSubmitted}
+                handleSubmittedStatus={handleSubmittedStatus}
+                quizCompleted={quizCompleted}
+                quizScore={quizScore}
+                handleQuizMarks={handleQuizMarks}
+                quizTotalMarks={quizTotalMarks}
+              />
+            )
+          )}
         </div>
       </Main>
     </Box>

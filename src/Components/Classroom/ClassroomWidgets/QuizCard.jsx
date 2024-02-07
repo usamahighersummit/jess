@@ -3,8 +3,7 @@ import Info from "../../../images/info.png";
 import Close from "../../../images/close.png";
 import Tick from "../../../images/check.png";
 
-import { Progress } from "rsuite";
-import "rsuite/dist/rsuite.min.css";
+import QuizResult from "./QuizResult";
 
 function QuizCard({
   quizData,
@@ -23,13 +22,6 @@ function QuizCard({
     handleSubmittedStatus(true);
   };
 
-  const style = {
-    width: 250,
-    display: "inline-block",
-    marginRight: 20,
-    marginLeft: 20,
-    position: "relative",
-  };
   return (
     <div className="w-[45%]">
       {quizData !== undefined && !quizCompleted ? (
@@ -127,37 +119,7 @@ function QuizCard({
         </div>
       ) : (
         quizCompleted && (
-          <div className="text-center">
-            <div style={style}>
-              <Progress.Circle
-                classPrefix="progress"
-                gapDegree={60}
-                strokeLinecap="butt"
-                percent={(quizScore / quizTotalMarks) * 100}
-                trailColor="#E1DAE3A8"
-                trailWidth={5}
-                strokeWidth={5}
-                gapPosition="bottom"
-                strokeColor="#F6CA30"
-                showInfo={false}
-              />
-              <div className="rs-progress-circle-info" style={{ top: "45px" }}>
-                <div className="score-text">{`${quizScore}/${quizTotalMarks}`}</div>
-                <div className="score-sub-text mt-[8%]">Score</div>
-              </div>
-            </div>
-            <div>
-              <div className="quiz-completed-text text-center mt-[2%]">
-                Quiz Completed!
-              </div>
-              <div className="quiz-completed-sub-text mt-[3%]">
-                Every quiz takes you closer to mystery.keep going!
-              </div>
-              <button className="enabled-submit-button mt-[3%]">
-                Continue
-              </button>
-            </div>
-          </div>
+          <QuizResult quizScore={quizScore} quizTotalMarks={quizTotalMarks} />
         )
       )}
     </div>
