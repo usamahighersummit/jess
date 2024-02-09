@@ -84,7 +84,7 @@ function QuizOrLessonCard({
             />
           </div>
           <div className="ml-[4%]">
-            <div className="lesson-or-quiz-text">
+            <div className="lesson-or-quiz-text text-start">
               {type === 1 ? data.lesson_name : data.student_quiz_title}
             </div>
             <div className="lesson-or-quiz-sub-text text-start">

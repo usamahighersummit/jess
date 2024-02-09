@@ -89,31 +89,31 @@ function ClassroomHome() {
   };
 
   useEffect(() => {
-    getClasroomQuizzes();
+    // getClasroomQuizzes();
     getSidebarData();
   }, []);
 
-  const getClasroomQuizzes = () => {
-    var token = "Bearer " + localStorage.getItem("access_token");
-    axios.defaults.baseURL = process.env.REACT_APP_REST_API_BASE_URL;
-    axios.defaults.headers.post["Content-Type"] =
-      "application/json;charset=utf-8";
-    axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
-    axios.defaults.headers.post["authorization"] = token;
-    axios
-      .post(process.env.REACT_APP_REST_API_BASE_URL + "/student_view_class", {
-        method: "POST",
-        class_id: class_id,
-        today_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
-      })
-      .then((res) => {
-        console.log("classroom list: ", res.data);
-        setQuizzesData(res.data.complete_quizzes_list);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // const getClasroomQuizzes = () => {
+  //   var token = "Bearer " + localStorage.getItem("access_token");
+  //   axios.defaults.baseURL = process.env.REACT_APP_REST_API_BASE_URL;
+  //   axios.defaults.headers.post["Content-Type"] =
+  //     "application/json;charset=utf-8";
+  //   axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+  //   axios.defaults.headers.post["authorization"] = token;
+  //   axios
+  //     .post(process.env.REACT_APP_REST_API_BASE_URL + "/student_view_class", {
+  //       method: "POST",
+  //       class_id: class_id,
+  //       today_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
+  //     })
+  //     .then((res) => {
+  //       console.log("classroom list: ", res.data);
+  //       setQuizzesData(res.data.complete_quizzes_list);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
   const getCurrentDate = () => {
     const date = new Date();

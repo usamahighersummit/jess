@@ -71,7 +71,7 @@ export function SidebarTopicAccordian({
             }}
           >
             <div className="flex">
-              <div className="ml-[10px]">
+              <div className="ml-[10px]  text-start">
                 {topicIndex + 1 + ". " + topic.topic_name}
               </div>
             </div>

@@ -54,7 +54,9 @@ export function SidebarSubtopicAccordian({
                   src={open === 1 ? SubtopicArrowUpIcon : SubtopicArrowIcon}
                 />
               </div>
-              <div className="ml-[10px]">{subtopic.sub_topic_name}</div>
+              <div className="ml-[10px] text-start">
+                {subtopic.sub_topic_name}
+              </div>
             </div>
           </AccordionHeader>
         </div>
