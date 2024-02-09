@@ -16,8 +16,8 @@ function QuizCard({
   quizCompleted,
   quizScore,
   quizTotalMarks,
+  submitQuiz,
 }) {
-  console.log("IS SUBMITTED IN QUIZ CARD: ", isSubmitted);
   const handleSubmit = () => {
     handleSubmittedStatus(true);
   };
@@ -119,7 +119,11 @@ function QuizCard({
         </div>
       ) : (
         quizCompleted && (
-          <QuizResult quizScore={quizScore} quizTotalMarks={quizTotalMarks} />
+          <QuizResult
+            quizScore={quizScore}
+            quizTotalMarks={quizTotalMarks}
+            submitQuiz={submitQuiz}
+          />
         )
       )}
     </div>

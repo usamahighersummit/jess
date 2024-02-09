@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import JoinClassroom from "./LoginWidgets/JoinClassroom";
 
 function LoginPageRightSide() {
@@ -8,6 +9,12 @@ function LoginPageRightSide() {
   const [passwordError, setPasswordError] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const noErrorState = useRef({ email: false, password: false });
+
+  const navigate = useNavigate();
+
+  const dashboardNavigation = () => {
+    navigate("/home");
+  };
 
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -68,7 +75,11 @@ function LoginPageRightSide() {
           }
           localStorage.setItem("access_token", res.data.access_token);
           localStorage.setItem("email_address", credentials.email);
-          setLoggedIn(true);
+          if (res.data.student_status === 1) {
+            setLoggedIn(true);
+          } else {
+            dashboardNavigation();
+          }
         })
         .catch((err) => {
           console.log(err);

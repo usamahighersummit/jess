@@ -34,6 +34,11 @@ export function SidebarTopicAccordian({
   topicIndex,
   handleLessonClick,
   handleQuizClick,
+  selectedIndexQuizOrLesson,
+  hoverIndexQuizOrLesson,
+  onMouseEnter,
+  onMouseLeave,
+  handleSelectedIndex,
 }) {
   const [open, setOpen] = React.useState(0);
   const [hoverIndex, setHoverIndex] = useState(-1);
@@ -87,6 +92,11 @@ export function SidebarTopicAccordian({
                   subtopicIndex={index}
                   handleLessonClick={handleLessonClick}
                   handleQuizClick={handleQuizClick}
+                  selectedIndexQuizOrLesson={selectedIndexQuizOrLesson}
+                  hoverIndexQuizOrLesson={hoverIndexQuizOrLesson}
+                  onMouseEnter={onMouseEnter}
+                  onMouseLeave={onMouseLeave}
+                  handleSelectedIndex={handleSelectedIndex}
                 />
               </div>
             </>

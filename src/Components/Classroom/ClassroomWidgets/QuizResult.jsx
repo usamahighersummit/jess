@@ -1,7 +1,7 @@
 import React from "react";
 import { Progress } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
-function QuizResult({ quizScore, quizTotalMarks }) {
+function QuizResult({ quizScore, quizTotalMarks, submitQuiz }) {
   const handleStrokeColor = () => {
     let percentage = (quizScore / quizTotalMarks) * 100;
     if (percentage < 50) {
@@ -46,7 +46,12 @@ function QuizResult({ quizScore, quizTotalMarks }) {
         <div className="quiz-completed-sub-text mt-[3%]">
           Every quiz takes you closer to mystery.keep going!
         </div>
-        <button className="enabled-submit-button mt-[3%]">Continue</button>
+        <button
+          className="enabled-submit-button mt-[3%]"
+          onClick={() => submitQuiz()}
+        >
+          Continue
+        </button>
       </div>
     </div>
   );

@@ -637,3 +637,15 @@ letter-spacing: 0.012px;
   line-height: 16px; /* 133.333% */
   letter-spacing: 0.012px;
 }
+
+.main-content-div{
+  width: 100%;
+  overflow: auto; 
+  scroll-behavior: smooth; /* Add smooth scrolling */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; 
+  scrollbar-width: none;  
+  
+}

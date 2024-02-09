@@ -6,11 +6,15 @@ import Question4 from "../../../images/4.gif";
 import parse, { domToReact } from "html-react-parser";
 import LessonLeftSide from "./LessonLeftSide";
 import LessonRightSide from "./LessonRightSide";
+import moment from "moment";
+import axios from "axios";
 
 function LessonCard({
   lessonResponseData,
   selectedResponseButtons,
   setSelectedResponseButtons,
+  classId,
+  lessondata,
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [speaking, setSpeaking] = useState(false);
@@ -162,6 +166,36 @@ function LessonCard({
     return () => clearTimeout(timer);
   }, [lessonResponseData]);
 
+  const updateLessonStatus = () => {
+    console.log("LESSON IN THE UPDATE: ", lessondata[0].lesson_id);
+    var token = "Bearer " + localStorage.getItem("access_token");
+    axios.defaults.baseURL = process.env.REACT_APP_REST_API_BASE_URL;
+    axios.defaults.headers.post["Content-Type"] =
+      "application/json;charset=utf-8";
+    axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+    axios.defaults.headers.post["authorization"] = token;
+    axios
+      .post(
+        process.env.REACT_APP_REST_API_BASE_URL + "/create_lesson_progress",
+        {
+          method: "POST",
+          lesson_id: lessondata[0].lesson_id,
+          class_id: classId,
+          area_id: lessondata[0].area_id,
+          today_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
+        }
+      )
+      .then((res) => {
+        console.log("Quiz: ", res.data);
+        // setQuizOrLesson(0);
+        // handleQuizValue(res.data.quiz_question_list);
+        // handleQuizTotalMarks(quiz.quiz_marks);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   // Effect for handling changes in currentIndex
   useEffect(() => {
     window.speechSynthesis.cancel();
@@ -191,7 +225,8 @@ function LessonCard({
         let selectedoption = selectedResponseButtons[selectedAnswerIndex];
         if (selectedoption.target_page_id === null) {
           setIsLoading(false);
-          setCurrentWordIndex(-4);
+          setCurrentWordIndex(-5);
+          updateLessonStatus();
           return;
         }
       }
@@ -214,6 +249,9 @@ function LessonCard({
       if (index !== undefined) {
         selectedLesson = lessonResponseData[index];
         setSelectedAnswerIndex(-1);
+        if (selectedLesson.next_page_id === null) {
+          updateLessonStatus();
+        }
       }
       if (selectedLesson.has_button) {
         setSelectedResponseButtons(selectedLesson.options_list);

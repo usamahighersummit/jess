@@ -17,6 +17,7 @@ function ClassroomHome() {
   const [quizScore, setQuizScore] = useState(0);
   const [quizTotalMarks, setQuizTotalMarks] = useState();
   const [sidebarData, setSidebarData] = useState();
+  const [attemptedQuiz, setAttemptedQuiz] = useState([]);
   const location = useLocation();
   let { class_id } = location.state !== null ? location.state : "";
 
@@ -42,6 +43,34 @@ function ClassroomHome() {
   };
 
   const handleIterationIndex = () => {
+    console.log("DATA IS: ", quizData[selectedQuizQuestionIterationIndex]);
+    var obj = {
+      student_has_question_id:
+        quizData[selectedQuizQuestionIterationIndex].student_has_question_id,
+      student_selected_option:
+        quizData[selectedQuizQuestionIterationIndex].answers[
+          selectedAnswerIndex
+        ].quiz_options_id,
+      score:
+        quizData[selectedQuizQuestionIterationIndex].answers[
+          selectedAnswerIndex
+        ].quiz_options_score,
+      feedback:
+        quizData[selectedQuizQuestionIterationIndex].answers[
+          selectedAnswerIndex
+        ].quiz_options_score === 0
+          ? quizData[selectedQuizQuestionIterationIndex].quiz_incorrect_feedback
+          : quizData[selectedQuizQuestionIterationIndex].quiz_correct_feedback,
+
+      recall_status: quizData[selectedQuizQuestionIterationIndex].recall_status,
+    };
+
+    let attemptedQuizLocal = attemptedQuiz;
+
+    attemptedQuizLocal = attemptedQuizLocal.concat(obj);
+
+    setAttemptedQuiz(attemptedQuizLocal);
+
     if (selectedQuizQuestionIterationIndex <= quizData.length - 1) {
       handleQuizMarks(
         quizData[selectedQuizQuestionIterationIndex].answers[
@@ -144,6 +173,8 @@ function ClassroomHome() {
         quizTotalMarks={quizTotalMarks}
         handleQuizTotalMarks={handleQuizTotalMarks}
         sidebarData={sidebarData}
+        classId={class_id}
+        attemptedQuiz={attemptedQuiz}
       />
     </div>
   );

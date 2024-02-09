@@ -20,6 +20,7 @@ import QuizCard from "./QuizCard";
 import axios from "axios";
 import { SidebarTopicAccordian } from "./SidebarAccordians/SidebarTopicAccordian";
 import LessonCard from "./LessonCard";
+import DrawerIcon from "../../../images/drawer.png";
 
 const drawerWidth = 340;
 
@@ -84,6 +85,8 @@ export default function ClassroomHomeDrawer({
   quizTotalMarks,
   handleQuizTotalMarks,
   sidebarData,
+  classId,
+  attemptedQuiz,
 }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -104,6 +107,34 @@ export default function ClassroomHomeDrawer({
   const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
   const [chunkSize, setChunkSize] = useState(4);
   const [lessonButtonData, setLessonButtonData] = useState([]);
+  const [lessondata, setLessonData] = useState([]);
+
+  const [selectedIndexQuizOrLesson, setSelectedIndexQuizOrLesson] =
+    useState("");
+  const [hoverIndexQuizOrLesson, setHoverIndexQuizOrLesson] = useState("");
+  const [selectedQuiz, setSelectedQuiz] = useState({});
+
+  const handleOnClick = (data, type) => {
+    if (type === 1) {
+      handleLessonClick(data);
+    } else {
+      handleQuizClick(data);
+    }
+  };
+
+  const onMouseEnter = (index) => {
+    setHoverIndexQuizOrLesson(index);
+  };
+  const onMouseLeave = () => {
+    setHoverIndexQuizOrLesson(-1);
+  };
+
+  const handleSelectedIndex = (index, data, type) => {
+    window.speechSynthesis.cancel();
+    console.log("INDEX IS: ", index);
+    setSelectedIndexQuizOrLesson(index);
+    handleOnClick(data, type);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -114,6 +145,7 @@ export default function ClassroomHomeDrawer({
   };
 
   const handleQuizClick = (quiz) => {
+    setSelectedQuiz(quiz);
     var token = "Bearer " + localStorage.getItem("access_token");
     axios.defaults.baseURL = process.env.REACT_APP_REST_API_BASE_URL;
     axios.defaults.headers.post["Content-Type"] =
@@ -150,11 +182,39 @@ export default function ClassroomHomeDrawer({
       })
       .then((res) => {
         setQuizOrLesson(1);
+        setLessonData(res.data.lesson_data);
         console.log("DATA", res.data.lesson_data[0].page_list);
         setLessonResponseData(res.data.lesson_data[0].page_list);
         setSelectedResponseButtons(
           res.data.lesson_data[0].page_list[0].options_list
         );
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const submitQuiz = () => {
+    console.log("QUIZ DATA IS: ", selectedQuiz);
+    var token = "Bearer " + localStorage.getItem("access_token");
+    axios.defaults.baseURL = process.env.REACT_APP_REST_API_BASE_URL;
+    axios.defaults.headers.post["Content-Type"] =
+      "application/json;charset=utf-8";
+    axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+    axios.defaults.headers.post["authorization"] = token;
+    axios
+      .post(process.env.REACT_APP_REST_API_BASE_URL + "/submit_quiz", {
+        method: "POST",
+        classroom_id: classId,
+        student_quiz_id: selectedQuiz.student_quiz_id,
+        total_score: selectedQuiz.quiz_marks,
+        obtained_score: quizScore,
+        question_response: attemptedQuiz,
+
+        // lesson_key: lesson.lesson_key,
+      })
+      .then((res) => {
+        console.log("reponse: ", res.data);
       })
       .catch((error) => {
         console.log(error);
@@ -199,16 +259,35 @@ export default function ClassroomHomeDrawer({
         <DrawerHeader
           style={{
             background: "#403151",
-            minHeight: "20%",
+            minHeight: "17vh",
+            justifyContent: "start",
+            alignItems: "start",
+            padding: "7%",
           }}
         >
-          <IconButton onClick={handleDrawerClose}>
+          <div>
+            <button className="flex w-[100%]" onClick={handleDrawerClose}>
+              <img src={DrawerIcon} style={{ objectFit: "contain" }} />
+            </button>
+            <div
+              className="mt-[20%]"
+              style={{
+                fontFamily: "roboto",
+                fontSize: "20px",
+                lineHeight: "24px",
+                color: "white",
+              }}
+            >
+              {sidebarData && sidebarData.class_data.classroom_name}
+            </div>
+          </div>
+          {/* <IconButton onClick={handleDrawerClose}>
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon style={{ color: "white" }} />
             ) : (
               <ChevronRightIcon />
             )}
-          </IconButton>
+          </IconButton> */}
         </DrawerHeader>
         <List style={{ background: "#403151" }}>
           {sidebarData &&
@@ -219,6 +298,11 @@ export default function ClassroomHomeDrawer({
                   topicIndex={index}
                   handleLessonClick={handleLessonClick}
                   handleQuizClick={handleQuizClick}
+                  selectedIndexQuizOrLesson={selectedIndexQuizOrLesson}
+                  hoverIndexQuizOrLesson={hoverIndexQuizOrLesson}
+                  onMouseEnter={onMouseEnter}
+                  onMouseLeave={onMouseLeave}
+                  handleSelectedIndex={handleSelectedIndex}
                 />
                 <hr className="mt-0 mb-0" style={{ color: "white" }}></hr>
               </>
@@ -240,12 +324,18 @@ export default function ClassroomHomeDrawer({
       </Drawer>
       <Main open={open} style={{ padding: "0px" }}>
         <DrawerHeader />
-        <div className=" ">
+        <div
+          className={
+            quizOrLesson === 0 && "flex justify-center items-center h-[90vh] "
+          }
+        >
           {quizOrLesson === 1 ? (
             <LessonCard
               lessonResponseData={lessonResponseData}
               selectedResponseButtons={selectedResponseButtons}
               setSelectedResponseButtons={setSelectedResponseButtons}
+              classId={classId}
+              lessondata={lessondata}
             />
           ) : (
             quizOrLesson === 0 && (
@@ -263,6 +353,7 @@ export default function ClassroomHomeDrawer({
                 quizScore={quizScore}
                 handleQuizMarks={handleQuizMarks}
                 quizTotalMarks={quizTotalMarks}
+                submitQuiz={submitQuiz}
               />
             )
           )}

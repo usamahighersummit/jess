@@ -14,6 +14,11 @@ export function SidebarSubtopicAccordian({
   handleMouseEnterTopic,
   handleLessonClick,
   handleQuizClick,
+  selectedIndexQuizOrLesson,
+  hoverIndexQuizOrLesson,
+  onMouseEnter,
+  onMouseLeave,
+  handleSelectedIndex,
 }) {
   const [open, setOpen] = React.useState(0);
   const [hoverIndex, setHoverIndex] = useState(-1);
@@ -56,7 +61,7 @@ export function SidebarSubtopicAccordian({
 
         <hr className="mt-0 mb-0" />
         <AccordionBody
-          className="p-2 justify-between "
+          className="p-0 justify-between "
           style={{
             color: "white",
           }}
@@ -66,16 +71,26 @@ export function SidebarSubtopicAccordian({
               data={lesson}
               type={1}
               itemIndex={index}
+              selectedIndex={selectedIndexQuizOrLesson}
+              hoverIndex={hoverIndexQuizOrLesson}
               handleClick={handleLessonClick}
+              onMouseEnter={onMouseEnter}
+              onMouseLeave={onMouseLeave}
+              handleSelectedIndex={handleSelectedIndex}
             />
           ))}
-          {subtopic.quiz_list &&
-            subtopic.quiz_list.map((quiz, index) => (
+          {subtopic.quizzes_list &&
+            subtopic.quizzes_list.map((quiz, index) => (
               <QuizOrLessonCard
                 data={quiz}
                 type={2}
-                itemIndex={index}
+                itemIndex={index + subtopic.lesson_list.length}
                 handleClick={handleQuizClick}
+                selectedIndex={selectedIndexQuizOrLesson}
+                hoverIndex={hoverIndexQuizOrLesson}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+                handleSelectedIndex={handleSelectedIndex}
               />
             ))}
         </AccordionBody>
