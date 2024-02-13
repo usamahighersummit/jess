@@ -120,7 +120,7 @@ function ClassroomHome() {
     const todayDate =
       date.getFullYear() +
       "-" +
-      date.getMonth() +
+      (1 + parseInt(date.getMonth())) +
       "-" +
       date.getDate() +
       " " +
@@ -131,6 +131,7 @@ function ClassroomHome() {
       date.getSeconds() +
       "." +
       date.getMilliseconds();
+    console.log("object");
 
     return todayDate;
   };
