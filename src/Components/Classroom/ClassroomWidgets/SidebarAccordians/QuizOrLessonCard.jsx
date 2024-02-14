@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import QuizIcon from "../../../../images/quiz.png";
 import LessonIcon from "../../../../images/lesson-icon.png";
 import CheckCircle from "../../../../images/check_circle.png";
+import Lock from "../../../../images/lock.png";
 
 function QuizOrLessonCard({
   data,
@@ -16,7 +17,7 @@ function QuizOrLessonCard({
 }) {
   const handleHover = () => {
     if (
-      (type === 1 && data.lesson_state !== 1) ||
+      (type === 1 && data.lesson_state !== 2) ||
       (type === 2 && data.quiz_state !== 1)
     ) {
       return onMouseEnter(type === 1 ? data.lesson_key : data.student_quiz_id);
@@ -25,7 +26,7 @@ function QuizOrLessonCard({
 
   const handleClickButton = () => {
     if (
-      (type === 1 && data.lesson_state !== 1) ||
+      (type === 1 && data.lesson_state !== 2) ||
       (type === 2 && data.quiz_state !== 1)
     ) {
       handleSelectedIndex(
@@ -65,7 +66,7 @@ function QuizOrLessonCard({
         ></div>
         <button
           disabled={
-            (type === 1 && data.lesson_state === 1) ||
+            (type === 1 && data.lesson_state === 2) ||
             (type === 2 && data.quiz_state === 1)
           }
           className="flex w-[100%] pb-[8px] pt-[8px] ml-[5%]"
@@ -77,6 +78,8 @@ function QuizOrLessonCard({
                   ? QuizIcon
                   : type === 1 && data.lesson_state === 1
                   ? CheckCircle
+                  : type === 1 && data.lesson_state === 2
+                  ? Lock
                   : type === 2 && data.quiz_state === 1
                   ? CheckCircle
                   : LessonIcon

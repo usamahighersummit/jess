@@ -219,6 +219,7 @@ function ClassroomHome() {
         setSelectedQuiz={setSelectedQuiz}
         submitQuiz={submitQuiz}
         handleNewQuizState={handleNewQuizState}
+        getSidebarData={getSidebarData}
       />
     </div>
   );

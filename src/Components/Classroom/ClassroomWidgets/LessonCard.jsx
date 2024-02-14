@@ -8,6 +8,7 @@ import LessonLeftSide from "./LessonLeftSide";
 import LessonRightSide from "./LessonRightSide";
 import moment from "moment";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function LessonCard({
   lessonResponseData,
@@ -15,6 +16,7 @@ function LessonCard({
   setSelectedResponseButtons,
   classId,
   lessondata,
+  getSidebarData,
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [speaking, setSpeaking] = useState(false);
@@ -28,6 +30,7 @@ function LessonCard({
   const [chunkSize, setChunkSize] = useState(7.5);
   //This is the part which is working fine with highlighter but
   const speechUtteranceRef = useRef(null);
+  const navigate = useNavigate();
 
   const getTextChunks = (text, chunkSize = 3) => {
     const words = text.replace(/(<([^>]+)>)/gi, "").split(/\s+/);
@@ -187,6 +190,7 @@ function LessonCard({
       )
       .then((res) => {
         console.log("Quiz: ", res.data);
+        // getSidebarData();
         // setQuizOrLesson(0);
         // handleQuizValue(res.data.quiz_question_list);
         // handleQuizTotalMarks(quiz.quiz_marks);
@@ -274,6 +278,11 @@ function LessonCard({
   const handleSelectedAnswerIndex = (index) => {
     setSelectedAnswerIndex(index);
   };
+
+  const handleNavigateToHome = () => {
+    window.speechSynthesis.cancel();
+    navigate("/home");
+  };
   return (
     <React.Fragment>
       <section>
@@ -302,6 +311,7 @@ function LessonCard({
               handleRepeat={handleRepeat}
               pauseResumeStatus={pauseResumeStatus}
               renderTextWithHighlighting={renderTextWithHighlighting}
+              handleNavigateToHome={handleNavigateToHome}
             />
             <LessonRightSide
               lessonResponseData={lessonResponseData}

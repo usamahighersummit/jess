@@ -11,7 +11,7 @@ function App() {
 
   useEffect(() => {
     if (token === null) {
-      if (window.location.pathname !== "/") window.location.replace("/login");
+      if (window.location.pathname !== "/") window.location.replace("/");
     } else {
       getUserJwtSession();
     }

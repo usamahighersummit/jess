@@ -91,6 +91,7 @@ export default function ClassroomHomeDrawer({
   setSelectedQuiz,
   submitQuiz,
   handleNewQuizState,
+  getSidebarData,
 }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
@@ -289,6 +290,9 @@ export default function ClassroomHomeDrawer({
             justifyContent: "start",
             alignItems: "start",
             padding: "7%",
+            position: "sticky",
+            top: "0px",
+            zIndex: "1000",
           }}
         >
           <div>
@@ -366,6 +370,7 @@ export default function ClassroomHomeDrawer({
               setSelectedResponseButtons={setSelectedResponseButtons}
               classId={classId}
               lessondata={lessondata}
+              getSidebarData={getSidebarData}
             />
           ) : (
             quizOrLesson === 0 && (

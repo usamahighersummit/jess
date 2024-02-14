@@ -8,6 +8,8 @@ import PauseButton from "../../../images/pause-button.png";
 import ResumeButton from "../../../images/play-button.png";
 import HomeButton from "../../../images/home-button.png";
 import BouncingDotsLoader from "./BouncingDotsLoader";
+import { useNavigate } from "react-router-dom";
+
 function LessonLeftSide({
   lessonResponseData,
   selectedResponseButtons,
@@ -25,7 +27,10 @@ function LessonLeftSide({
   handleRepeat,
   pauseResumeStatus,
   renderTextWithHighlighting,
+  handleNavigateToHome,
 }) {
+  const navigate = useNavigate();
+
   return (
     <div className="relative">
       <div className="bg-[#403151] absolute top-[2%] right-[3%]">
@@ -34,7 +39,7 @@ function LessonLeftSide({
         </button>
       </div>
       <div className="bg-[#403151] absolute top-[2%] left-[3%]">
-        <button>
+        <button onClick={handleNavigateToHome}>
           <img src={HomeButton} />
         </button>
       </div>
@@ -43,9 +48,6 @@ function LessonLeftSide({
         // style={{ backgroundImage: `url(${Background})` }}
         style={{ backgroundColor: "#403151" }}
       >
-        <div className="jess_icon left-[35px] md:left-[35px] sm:left-[30px]">
-          {/* <img src={TeepeeIcon} alt="" /> */}
-        </div>
         <div
           style={{
             width: isLoading && "100%",
