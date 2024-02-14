@@ -44,14 +44,9 @@ function QuizResult({ quizScore, quizTotalMarks, submitQuiz }) {
           Quiz Completed!
         </div>
         <div className="quiz-completed-sub-text mt-[3%]">
-          Every quiz takes you closer to mystery.keep going!
+          Every quiz takes you closer to mastery.keep going!
         </div>
-        <button
-          className="enabled-submit-button mt-[3%]"
-          onClick={() => submitQuiz()}
-        >
-          Continue
-        </button>
+        <button className="enabled-submit-button mt-[3%]">Continue</button>
       </div>
     </div>
   );

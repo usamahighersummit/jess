@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -87,32 +87,25 @@ export default function ClassroomHomeDrawer({
   sidebarData,
   classId,
   attemptedQuiz,
+  selectedQuiz,
+  setSelectedQuiz,
+  submitQuiz,
+  handleNewQuizState,
 }) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const [quizOrLesson, setQuizOrLesson] = React.useState(2);
+  const [open, setOpen] = React.useState(true);
+  const [quizOrLesson, setQuizOrLesson] = React.useState(-1);
   const [lessonResponseData, setLessonResponseData] = React.useState();
   const [selectedResponseButtons, setSelectedResponseButtons] = React.useState(
     []
   );
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [speaking, setSpeaking] = useState(false);
-  const isFirstRender = useRef(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedAnswerIndexLesson, setSelectedAnswerIndexLesson] =
-    useState(-1);
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [pauseResumeStatus, setPauseResumeStatus] = useState(true);
-  const [currentWordIndex, setCurrentWordIndex] = useState(-4);
-  const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
-  const [chunkSize, setChunkSize] = useState(4);
-  const [lessonButtonData, setLessonButtonData] = useState([]);
   const [lessondata, setLessonData] = useState([]);
-
   const [selectedIndexQuizOrLesson, setSelectedIndexQuizOrLesson] =
     useState("");
   const [hoverIndexQuizOrLesson, setHoverIndexQuizOrLesson] = useState("");
-  const [selectedQuiz, setSelectedQuiz] = useState({});
+  const [openAccordian, setOpenAccordian] = React.useState(null);
+  const [openSubtopicAccordian, setOpenSubtopicAccordian] = React.useState(0);
+  const [firstIteration, setFirstIteration] = useState(false);
 
   const handleOnClick = (data, type) => {
     if (type === 1) {
@@ -145,6 +138,11 @@ export default function ClassroomHomeDrawer({
   };
 
   const handleQuizClick = (quiz) => {
+    if (selectedQuiz) {
+      if (selectedQuiz.student_quiz_id === quiz.student_quiz_id) {
+        return;
+      }
+    }
     setSelectedQuiz(quiz);
     var token = "Bearer " + localStorage.getItem("access_token");
     axios.defaults.baseURL = process.env.REACT_APP_REST_API_BASE_URL;
@@ -162,6 +160,7 @@ export default function ClassroomHomeDrawer({
         setQuizOrLesson(0);
         handleQuizValue(res.data.quiz_question_list);
         handleQuizTotalMarks(quiz.quiz_marks);
+        handleNewQuizState();
       })
       .catch((error) => {
         console.log(error);
@@ -183,6 +182,7 @@ export default function ClassroomHomeDrawer({
       .then((res) => {
         setQuizOrLesson(1);
         setLessonData(res.data.lesson_data);
+        setSelectedQuiz(null);
         console.log("DATA", res.data.lesson_data[0].page_list);
         setLessonResponseData(res.data.lesson_data[0].page_list);
         setSelectedResponseButtons(
@@ -194,32 +194,58 @@ export default function ClassroomHomeDrawer({
       });
   };
 
-  const submitQuiz = () => {
-    console.log("QUIZ DATA IS: ", selectedQuiz);
-    var token = "Bearer " + localStorage.getItem("access_token");
-    axios.defaults.baseURL = process.env.REACT_APP_REST_API_BASE_URL;
-    axios.defaults.headers.post["Content-Type"] =
-      "application/json;charset=utf-8";
-    axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
-    axios.defaults.headers.post["authorization"] = token;
-    axios
-      .post(process.env.REACT_APP_REST_API_BASE_URL + "/submit_quiz", {
-        method: "POST",
-        classroom_id: classId,
-        student_quiz_id: selectedQuiz.student_quiz_id,
-        total_score: selectedQuiz.quiz_marks,
-        obtained_score: quizScore,
-        question_response: attemptedQuiz,
-
-        // lesson_key: lesson.lesson_key,
-      })
-      .then((res) => {
-        console.log("reponse: ", res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  useEffect(() => {
+    if (!firstIteration) {
+      if (sidebarData) {
+        for (
+          let topicIndex = 0;
+          topicIndex < sidebarData.topic_list.length;
+          topicIndex++
+        ) {
+          const topic = sidebarData.topic_list[topicIndex];
+          for (
+            let subtopicIndex = 0;
+            subtopicIndex < topic.sub_topic_list.length;
+            subtopicIndex++
+          ) {
+            const subtopic = topic.sub_topic_list[subtopicIndex];
+            for (
+              let lessonIndex = 0;
+              lessonIndex < subtopic.lesson_list.length;
+              lessonIndex++
+            ) {
+              const lesson = subtopic.lesson_list[lessonIndex];
+              if (lesson.lesson_state === 0) {
+                handleLessonClick(lesson);
+                setOpenAccordian(topicIndex);
+                handleSelectedIndex(lesson.lesson_key, lesson, 1);
+                setOpenSubtopicAccordian(subtopicIndex);
+                setFirstIteration(true);
+                return;
+              }
+            }
+            if (quizOrLesson === -1) {
+              for (
+                let quizIndex = 0;
+                quizIndex < subtopic.quizzes_list.length;
+                quizIndex++
+              ) {
+                const quiz = subtopic.quizzes_list[quizIndex];
+                if (quiz.quiz_state === 0) {
+                  handleQuizClick(quiz);
+                  setOpenAccordian(topicIndex);
+                  handleSelectedIndex(quiz.student_quiz_id, quiz, 2);
+                  setOpenSubtopicAccordian(subtopicIndex);
+                  setFirstIteration(true);
+                  return;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }, [sidebarData]);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -303,6 +329,10 @@ export default function ClassroomHomeDrawer({
                   onMouseEnter={onMouseEnter}
                   onMouseLeave={onMouseLeave}
                   handleSelectedIndex={handleSelectedIndex}
+                  open={openAccordian}
+                  setOpen={setOpenAccordian}
+                  openSubtopicAccordian={openSubtopicAccordian}
+                  setOpenSubtopicAccordian={setOpenSubtopicAccordian}
                 />
                 <hr className="mt-0 mb-0" style={{ color: "white" }}></hr>
               </>

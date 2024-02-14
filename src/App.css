@@ -649,3 +649,7 @@ letter-spacing: 0.012px;
   scrollbar-width: none;  
   
 }
+
+.dropdown-toggle::after{
+  display: none !important;
+}

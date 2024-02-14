@@ -27,10 +27,21 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:staging": "env-cmd -f .env.staging react-scripts start",
     "build": "react-scripts build",
+    "prebuild:staging": "echo 'Starting build for STAGING...'",
+    "build:staging": "npm-run-all build:staging:*",
+    "build:staging:main": "env-cmd -f .env.staging react-scripts build",
+    "build:staging:zip": "zip -r build_staging.zip build && echo 'Staging build zipped'",
+    "postbuild:staging": "echo 'STAGING build complete.'",
+    "prebuild:prod": "echo 'Starting build for PRODUCTION...'",
+    "build:prod": "npm-run-all build:prod:*",
+    "build:prod:main": "env-cmd -f .env.production react-scripts build",
+    "build:prod:zip": "zip -r build_prod.zip build && echo 'Production build zipped'",
+    "postbuild:prod": "echo 'PRODUCTION build complete.'",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
+  },  
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -50,6 +61,8 @@
     ]
   },
   "devDependencies": {
+    "env-cmd": "^10.1.0",
+    "npm-run-all": "^4.1.5",
     "tailwindcss": "^3.4.1"
   }
 }

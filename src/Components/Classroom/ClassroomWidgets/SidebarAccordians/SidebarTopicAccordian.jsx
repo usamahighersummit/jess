@@ -39,11 +39,20 @@ export function SidebarTopicAccordian({
   onMouseEnter,
   onMouseLeave,
   handleSelectedIndex,
+  open,
+  setOpen,
+  openSubtopicAccordian,
+  setOpenSubtopicAccordian,
 }) {
-  const [open, setOpen] = React.useState(0);
   const [hoverIndex, setHoverIndex] = useState(-1);
 
-  const handleOpen = (value) => setOpen(open === value ? 0 : value);
+  const handleOpen = (value) => {
+    if (open === value) {
+      setOpen(null);
+    } else {
+      setOpen(value);
+    }
+  };
 
   const handleMouseEnter = (index) => {
     setHoverIndex(index);
@@ -55,19 +64,20 @@ export function SidebarTopicAccordian({
 
   return (
     <>
-      <Accordion open={open === 1}>
+      <Accordion open={open === topicIndex}>
         <div className="mr-[3px] ml-[3px] ">
           <AccordionHeader
+            key={topicIndex}
             onMouseEnter={() => handleMouseEnter(topicIndex)}
             onMouseLeave={() => handleMouseLeave()}
-            onClick={() => handleOpen(1)}
+            onClick={() => handleOpen(topicIndex)}
             className="p-[10px] justify-between accordian-header-text border-b-0 rounded mt-[5px] mb-[5px]"
             style={{
               color: "white",
               backgroundColor:
-                open !== 1 && hoverIndex === topicIndex
+                open !== topicIndex && hoverIndex === topicIndex
                   ? "#4F355F"
-                  : open === 1 && "#7E418B",
+                  : open === topicIndex && "#7E418B",
             }}
           >
             <div className="flex">
@@ -97,6 +107,8 @@ export function SidebarTopicAccordian({
                   onMouseEnter={onMouseEnter}
                   onMouseLeave={onMouseLeave}
                   handleSelectedIndex={handleSelectedIndex}
+                  openSubtopicAccordian={openSubtopicAccordian}
+                  setOpenSubtopicAccordian={setOpenSubtopicAccordian}
                 />
               </div>
             </>

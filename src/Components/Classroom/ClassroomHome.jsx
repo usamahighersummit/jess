@@ -18,6 +18,8 @@ function ClassroomHome() {
   const [quizTotalMarks, setQuizTotalMarks] = useState();
   const [sidebarData, setSidebarData] = useState();
   const [attemptedQuiz, setAttemptedQuiz] = useState([]);
+  const [selectedQuiz, setSelectedQuiz] = useState({});
+
   const location = useLocation();
   let { class_id } = location.state !== null ? location.state : "";
 
@@ -85,7 +87,44 @@ function ClassroomHome() {
       setIsSubmitted(false);
     } else {
       setQuizCompleted(true);
+      submitQuiz();
     }
+  };
+
+  const handleNewQuizState = () => {
+    setSelectedQuizQuestionIterationIndex(0);
+    setSelectedAnswerIndex(-1);
+    setIsSubmitted(false);
+    setIsSubmitted(false);
+    setQuizCompleted(false);
+  };
+
+  const submitQuiz = () => {
+    console.log("QUIZ DATA IS: ", selectedQuiz);
+    var token = "Bearer " + localStorage.getItem("access_token");
+    axios.defaults.baseURL = process.env.REACT_APP_REST_API_BASE_URL;
+    axios.defaults.headers.post["Content-Type"] =
+      "application/json;charset=utf-8";
+    axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+    axios.defaults.headers.post["authorization"] = token;
+    axios
+      .post(process.env.REACT_APP_REST_API_BASE_URL + "/submit_quiz", {
+        method: "POST",
+        classroom_id: class_id,
+        student_quiz_id: selectedQuiz.student_quiz_id,
+        total_score: selectedQuiz.quiz_marks,
+        obtained_score: quizScore,
+        question_response: attemptedQuiz,
+
+        // lesson_key: lesson.lesson_key,
+      })
+      .then((res) => {
+        console.log("reponse: ", res.data);
+        getSidebarData();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
@@ -176,6 +215,10 @@ function ClassroomHome() {
         sidebarData={sidebarData}
         classId={class_id}
         attemptedQuiz={attemptedQuiz}
+        selectedQuiz={selectedQuiz}
+        setSelectedQuiz={setSelectedQuiz}
+        submitQuiz={submitQuiz}
+        handleNewQuizState={handleNewQuizState}
       />
     </div>
   );

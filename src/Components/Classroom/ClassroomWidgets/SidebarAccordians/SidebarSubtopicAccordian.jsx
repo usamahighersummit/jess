@@ -19,8 +19,9 @@ export function SidebarSubtopicAccordian({
   onMouseEnter,
   onMouseLeave,
   handleSelectedIndex,
+  openSubtopicAccordian,
+  setOpenSubtopicAccordian,
 }) {
-  const [open, setOpen] = React.useState(0);
   const [hoverIndex, setHoverIndex] = useState(-1);
 
   const handleMouseEnter = (index) => {
@@ -31,27 +32,39 @@ export function SidebarSubtopicAccordian({
     setHoverIndex(-1);
   };
 
-  const handleOpen = (value) => setOpen(open === value ? 0 : value);
+  const handleOpen = (value) => {
+    if (openSubtopicAccordian === value) {
+      setOpenSubtopicAccordian(null);
+    } else {
+      setOpenSubtopicAccordian(value);
+    }
+  };
 
   return (
     <>
-      <Accordion open={open === 1}>
+      <Accordion open={openSubtopicAccordian === subtopicIndex}>
         <div className="mr-[3px] ml-[3px] ">
           <AccordionHeader
             onMouseEnter={() => handleMouseEnter(subtopicIndex)}
             onMouseLeave={() => handleMouseLeave()}
-            onClick={() => handleOpen(1)}
+            onClick={() => handleOpen(subtopicIndex)}
             className=" p-[10px] justify-between accordian-header-text border-b-0 rounded mt-[5px] mb-[5px] pl-[20px]"
             style={{
               color: "white",
               backgroundColor:
-                open !== 1 && hoverIndex === subtopicIndex && "#4F355F",
+                openSubtopicAccordian !== subtopicIndex &&
+                hoverIndex === subtopicIndex &&
+                "#4F355F",
             }}
           >
             <div className="flex">
               <div className="mt-[auto] mb-[auto]">
                 <img
-                  src={open === 1 ? SubtopicArrowUpIcon : SubtopicArrowIcon}
+                  src={
+                    openSubtopicAccordian === subtopicIndex
+                      ? SubtopicArrowUpIcon
+                      : SubtopicArrowIcon
+                  }
                 />
               </div>
               <div className="ml-[10px] text-start">

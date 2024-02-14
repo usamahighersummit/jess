@@ -49,6 +49,7 @@ function QuizCard({
                       selectedAnswerIndex !== -1 &&
                       index === selectedAnswerIndex &&
                       "1.5px solid #7E418B",
+                    lineHeight: "normal",
                   }}
                   className="option-buttons"
                   onClick={() => handleSelectedAnswer(index)}
@@ -60,6 +61,7 @@ function QuizCard({
           </div>
           <div id="submit" className="mt-[6%]">
             <button
+              disabled={selectedAnswerIndex === -1}
               onClick={() =>
                 isSubmitted ? handleIterationIndex() : handleSubmit()
               }
