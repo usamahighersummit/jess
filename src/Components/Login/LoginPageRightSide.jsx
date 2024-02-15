@@ -157,7 +157,10 @@ function LoginPageRightSide() {
                       Sign In
                     </button>
 
-                    <div className=" mt-[20px] w-[75%]">
+                    <div
+                      className=" mt-[20px] w-[75%]"
+                      style={{ lineHeight: "10px" }}
+                    >
                       <span className="mb-[0px] beta-text ">
                         We are in closed beta. To access Jess please request a
                         username and password

@@ -21,6 +21,7 @@ import axios from "axios";
 import { SidebarTopicAccordian } from "./SidebarAccordians/SidebarTopicAccordian";
 import LessonCard from "./LessonCard";
 import DrawerIcon from "../../../images/drawer.png";
+import LockedLessonCard from "./LockedLessonCard";
 
 const drawerWidth = 340;
 
@@ -107,12 +108,16 @@ export default function ClassroomHomeDrawer({
   const [openAccordian, setOpenAccordian] = React.useState(null);
   const [openSubtopicAccordian, setOpenSubtopicAccordian] = React.useState(0);
   const [firstIteration, setFirstIteration] = useState(false);
+  const [isLockedLesson, setIsLockedLesson] = useState(false);
+  const [lockedLessonData, setLockedLessonData] = useState();
 
   const handleOnClick = (data, type) => {
-    if (type === 1) {
+    if (type === 1 && data.lesson_state !== 2) {
       handleLessonClick(data);
-    } else {
+    } else if (type === 2) {
       handleQuizClick(data);
+    } else if (type === 1 && data.lesson_state === 2) {
+      handleLockedLessonClick(data);
     }
   };
 
@@ -125,7 +130,6 @@ export default function ClassroomHomeDrawer({
 
   const handleSelectedIndex = (index, data, type) => {
     window.speechSynthesis.cancel();
-    console.log("INDEX IS: ", index);
     setSelectedIndexQuizOrLesson(index);
     handleOnClick(data, type);
   };
@@ -162,6 +166,7 @@ export default function ClassroomHomeDrawer({
         handleQuizValue(res.data.quiz_question_list);
         handleQuizTotalMarks(quiz.quiz_marks);
         handleNewQuizState();
+        setIsLockedLesson(false);
       })
       .catch((error) => {
         console.log(error);
@@ -189,6 +194,31 @@ export default function ClassroomHomeDrawer({
         setSelectedResponseButtons(
           res.data.lesson_data[0].page_list[0].options_list
         );
+        setIsLockedLesson(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleLockedLessonClick = (lesson) => {
+    var token = "Bearer " + localStorage.getItem("access_token");
+    axios.defaults.baseURL = process.env.REACT_APP_REST_API_BASE_URL;
+    axios.defaults.headers.post["Content-Type"] =
+      "application/json;charset=utf-8";
+    axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+    axios.defaults.headers.post["authorization"] = token;
+    axios
+      .post(process.env.REACT_APP_REST_API_BASE_URL + "/get_lesson_date", {
+        method: "POST",
+        area_id: lesson.area_id,
+        class_id: classId,
+      })
+      .then((res) => {
+        setLockedLessonData(res.data);
+        setQuizOrLesson(-1);
+        setIsLockedLesson(true);
+        setSelectedQuiz(null);
       })
       .catch((error) => {
         console.log(error);
@@ -360,7 +390,8 @@ export default function ClassroomHomeDrawer({
         <DrawerHeader />
         <div
           className={
-            quizOrLesson === 0 && "flex justify-center items-center h-[90vh] "
+            quizOrLesson === 0 ||
+            (isLockedLesson && "flex justify-center items-center h-[90vh] ")
           }
         >
           {quizOrLesson === 1 ? (
@@ -372,24 +403,26 @@ export default function ClassroomHomeDrawer({
               lessondata={lessondata}
               getSidebarData={getSidebarData}
             />
+          ) : quizOrLesson === 0 ? (
+            <QuizCard
+              quizData={quizData}
+              selectedQuizQuestionIterationIndex={
+                selectedQuizQuestionIterationIndex
+              }
+              handleIterationIndex={handleIterationIndex}
+              selectedAnswerIndex={selectedAnswerIndex}
+              handleSelectedAnswer={handleSelectedAnswer}
+              isSubmitted={isSubmitted}
+              handleSubmittedStatus={handleSubmittedStatus}
+              quizCompleted={quizCompleted}
+              quizScore={quizScore}
+              handleQuizMarks={handleQuizMarks}
+              quizTotalMarks={quizTotalMarks}
+              submitQuiz={submitQuiz}
+            />
           ) : (
-            quizOrLesson === 0 && (
-              <QuizCard
-                quizData={quizData}
-                selectedQuizQuestionIterationIndex={
-                  selectedQuizQuestionIterationIndex
-                }
-                handleIterationIndex={handleIterationIndex}
-                selectedAnswerIndex={selectedAnswerIndex}
-                handleSelectedAnswer={handleSelectedAnswer}
-                isSubmitted={isSubmitted}
-                handleSubmittedStatus={handleSubmittedStatus}
-                quizCompleted={quizCompleted}
-                quizScore={quizScore}
-                handleQuizMarks={handleQuizMarks}
-                quizTotalMarks={quizTotalMarks}
-                submitQuiz={submitQuiz}
-              />
+            isLockedLesson && (
+              <LockedLessonCard lockedLessonData={lockedLessonData} />
             )
           )}
         </div>

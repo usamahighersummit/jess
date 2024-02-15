@@ -35,6 +35,9 @@ function QuizOrLessonCard({
         type
       );
     }
+    if (type === 1 && data.lesson_state === 2) {
+      handleSelectedIndex(data.lesson_key, data, type);
+    }
   };
   return (
     <>
@@ -65,10 +68,7 @@ function QuizOrLessonCard({
           }}
         ></div>
         <button
-          disabled={
-            (type === 1 && data.lesson_state === 2) ||
-            (type === 2 && data.quiz_state === 1)
-          }
+          disabled={type === 2 && data.quiz_state === 1}
           className="flex w-[100%] pb-[8px] pt-[8px] ml-[5%]"
         >
           <div>
