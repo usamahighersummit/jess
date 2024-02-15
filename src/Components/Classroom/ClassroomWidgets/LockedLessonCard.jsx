@@ -4,12 +4,15 @@ import Lock from "../../../images/lock-lesson.png";
 function LockedLessonCard({ lockedLessonData }) {
   console.log("LOCKED LESSON DATA: ", lockedLessonData);
   return (
-    <div className="text-center">
+    <div className="text-center ">
       <div className="coming-soon-text">Coming Soon</div>
       <div className="flex justify-center">
         <img src={Lock} />
       </div>
-      <div className="unlock-lesson-text">
+      <div
+        className="unlock-lesson-text"
+        style={{ display: lockedLessonData.learn_date === null && "none" }}
+      >
         🔓 Unlocks on {lockedLessonData.learn_date}
       </div>
       <div className="lock-lesson-instruction-text">

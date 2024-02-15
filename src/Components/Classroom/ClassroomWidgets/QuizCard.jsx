@@ -49,7 +49,7 @@ function QuizCard({
                       selectedAnswerIndex !== -1 &&
                       index === selectedAnswerIndex &&
                       "1.5px solid #7E418B",
-                    lineHeight: "normal",
+                    lineHeight: "5px",
                   }}
                   className="option-buttons"
                   onClick={() => handleSelectedAnswer(index)}

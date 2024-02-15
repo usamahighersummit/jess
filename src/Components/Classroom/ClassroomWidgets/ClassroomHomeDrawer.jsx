@@ -390,8 +390,7 @@ export default function ClassroomHomeDrawer({
         <DrawerHeader />
         <div
           className={
-            quizOrLesson === 0 ||
-            (isLockedLesson && "flex justify-center items-center h-[90vh] ")
+            quizOrLesson === 0 && "flex justify-center items-center h-[90vh] "
           }
         >
           {quizOrLesson === 1 ? (
@@ -422,7 +421,9 @@ export default function ClassroomHomeDrawer({
             />
           ) : (
             isLockedLesson && (
-              <LockedLessonCard lockedLessonData={lockedLessonData} />
+              <div className="flex justify-center items-center h-[90vh]">
+                <LockedLessonCard lockedLessonData={lockedLessonData} />
+              </div>
             )
           )}
         </div>
